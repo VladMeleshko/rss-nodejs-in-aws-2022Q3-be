@@ -1,6 +1,6 @@
-const {products} = require('./constants/data');
+import {products} from './constants/data';
 
-module.exports.getProductsList = async (event) => {
+export const getProductsList = async () => {
   const productList = await Promise.resolve(products);
 
   return {

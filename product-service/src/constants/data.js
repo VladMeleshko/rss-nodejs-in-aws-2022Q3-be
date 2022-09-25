@@ -1,4 +1,4 @@
-module.exports.products = [
+export const products = [
     {
       "id": "08030371-fcda-4c85-8adb-88ef6e80349b",
       "title": "You Don't Know JS: Up & Going",

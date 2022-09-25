@@ -1,6 +1,6 @@
-const { products } = require('./constants/data');
+import {products} from './constants/data';
 
-module.exports.getProductsById = async (event) => {
+export const getProductsById = async (event) => {
   const {productId} = event.pathParameters;
 
   const product = await Promise.resolve(products.find(product => product.id === productId));
