@@ -1,0 +1,69 @@
+service: product-service-swagger
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: eu-west-1
+
+plugins:
+  - serverless-openapi-documentation
+
+functions:
+  getProductsList:
+    handler: src/getProductsList.getProductsList
+    events:
+      - httpApi:
+          path: /products
+          method: get
+          documentation:
+            summary: "Get a list of products"
+            description: "Get the full list of products available in the shop"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Return an array with products"
+                  schema:
+                    type: "array"
+                    items:
+                      $ref: '#/definitions/Product'
+      - httpApi:
+          path: /products/{productId}
+          method: get
+          documentation:
+            summary: "Get one product"
+            description: "Get one products by id"
+            pathParams:
+              - name: "productId"
+                description: "Product id in DB"
+                schema:
+                  type: "string"
+                  format: "uuid"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Return an array with products"
+                  schema:
+                    $ref: '#/definitions/Product'
+              - statusCode: 404
+                responseBody:
+                  description: "Product not found"
+definitions:
+  Product:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      count:
+        type: "number"
+        format: "float"
+      price:
+        type: "number"
+        format: "integer64"
