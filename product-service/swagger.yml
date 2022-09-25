@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: "My Shop BE endpoints"
+  description: "Programming Book Shop BE endpoints"
   version: "1.0.0"
-  title: "My Shop Swagger"
+  title: "Programming Book Shop Swagger"
 tags:
 - name: "product-service"
 schemes:
