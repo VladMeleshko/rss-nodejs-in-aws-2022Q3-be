@@ -1,55 +1,49 @@
-service: product-service-swagger
-
-frameworkVersion: '3'
-
-provider:
-  name: aws
-  runtime: nodejs12.x
-  stage: dev
-  region: eu-west-1
-
-plugins:
-  - serverless-openapi-documentation
-
-functions:
-  getProductsList:
-    handler: src/getProductsList.getProductsList
-    events:
-      - httpApi:
-          path: /products
-          method: get
-          documentation:
-            summary: "Get a list of products"
-            description: "Get the full list of products available in the shop"
-            methodResponses:
-              - statusCode: 200
-                responseBody:
-                  description: "Return an array with products"
-                  schema:
-                    type: "array"
-                    items:
-                      $ref: '#/definitions/Product'
-      - httpApi:
-          path: /products/{productId}
-          method: get
-          documentation:
-            summary: "Get one product"
-            description: "Get one products by id"
-            pathParams:
-              - name: "productId"
-                description: "Product id in DB"
-                schema:
-                  type: "string"
-                  format: "uuid"
-            methodResponses:
-              - statusCode: 200
-                responseBody:
-                  description: "Return an array with products"
-                  schema:
-                    $ref: '#/definitions/Product'
-              - statusCode: 404
-                responseBody:
-                  description: "Product not found"
+swagger: "2.0"
+info:
+  description: "My Shop BE endpoints"
+  version: "1.0.0"
+  title: "My Shop Swagger"
+tags:
+- name: "product-service"
+schemes:
+- "https"
+paths:
+  /products:
+    get:
+      tags:
+      - "product-service"
+      description: "Get a list of products"
+      produces: 
+      - "application/json"
+      responses:
+        "200":
+          description: "Return an array with products"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+  /products/{productId}:
+    get:
+      tags:
+      - "product-service"
+      summary: "Get one product"
+      description: "Get one products by id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Product id in DB"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        "200":
+          description: "Return a product"
+          schema:
+            $ref: "#/definitions/Product"
+        "404":
+          description: "Product not found!"
 definitions:
   Product:
     type: "object"
@@ -63,7 +57,7 @@ definitions:
         type: "string"
       count:
         type: "number"
-        format: "float"
+        format: "integer64"
       price:
         type: "number"
-        format: "integer64"
+        format: "float"
