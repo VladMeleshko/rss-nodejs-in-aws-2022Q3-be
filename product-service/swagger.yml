@@ -1,0 +1,63 @@
+swagger: "2.0"
+info:
+  description: "Programming Book Shop BE endpoints"
+  version: "1.0.0"
+  title: "Programming Book Shop Swagger"
+tags:
+- name: "product-service"
+schemes:
+- "https"
+paths:
+  /products:
+    get:
+      tags:
+      - "product-service"
+      description: "Get a list of products"
+      produces: 
+      - "application/json"
+      responses:
+        "200":
+          description: "Return an array with products"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+  /products/{productId}:
+    get:
+      tags:
+      - "product-service"
+      summary: "Get one product"
+      description: "Get one products by id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Product id in DB"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        "200":
+          description: "Return a product"
+          schema:
+            $ref: "#/definitions/Product"
+        "404":
+          description: "Product not found!"
+definitions:
+  Product:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      count:
+        type: "number"
+        format: "integer64"
+      price:
+        type: "number"
+        format: "float"
