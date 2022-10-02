@@ -2,6 +2,8 @@ service: product-service
 
 frameworkVersion: '3'
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -9,6 +11,9 @@ provider:
   region: eu-west-1
   httpApi:
     cors: true
+  environment:
+    DYNAMODB_PRODUCTS_DB: ${env:DYNAMODB_PRODUCTS_DB}
+    DYNAMODB_STOCKS_DB: ${env:DYNAMODB_STOCKS_DB}
 
 plugins:
   - serverless-webpack
@@ -26,3 +31,9 @@ functions:
       - httpApi:
           path: /products/{productId}
           method: get
+  createProduct:
+    handler: src/createProduct.createProduct
+    events:
+      - httpApi:
+          path: /products
+          method: post
