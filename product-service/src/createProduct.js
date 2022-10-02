@@ -15,31 +15,35 @@ const validationSchema = Joi.object({
 
 export const createProduct = async (event) => {
   console.log('Handler for creating new product called');
-
-  const {body} = event;
-
-  console.log('When calling, the following arguments of the request body are received: ', body);
-
-  if (!body) {
-    return {
-      statusCode: 400,
-      message: 'Data for creating new product is not defined'
-    }
-  }
-
-  const {value, error} = validationSchema.validate(body);
-
-  if (error) {
-    return {
-      statusCode: 400,
-      message: 'Data for creating new product is not valid',
-      error: JSON.stringify(error),
-    }
-  }
-
-  console.log('New product will be created with data: ', value);
-
+    
   try {
+    let {body} = event;
+
+    console.log('When calling, the following arguments of the request body are received: ', body);
+
+    if (!body) {
+      return {
+        statusCode: 400,
+        message: 'Data for creating new product is not defined'
+      }
+    }
+
+    if (typeof body === 'string') {
+      body = JSON.parse(body)
+    }
+
+    const {value, error} = validationSchema.validate(body);
+
+    if (error) {
+      return {
+        statusCode: 400,
+        message: 'Data for creating new product is not valid',
+        error: JSON.stringify(error),
+      }
+    }
+
+    console.log('New product will be created with data: ', value);
+
     const productId = v4();
     const product = {
       id: productId,

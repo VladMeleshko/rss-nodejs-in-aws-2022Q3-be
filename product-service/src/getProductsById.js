@@ -8,18 +8,18 @@ const dynamo = new AWS.DynamoDB.DocumentClient({
 export const getProductsById = async (event) => {
   console.log('Get product by id handler called');
 
-  const {productId} = event.pathParameters;
-
-  console.log('When calling, the following arguments of the path parameters are received: productId =', productId);
-
-  if (!productId) {
-    return {
-      statusCode: 400,
-      message: 'Product id is not defined'
-    }
-  }
-
   try {
+    const {productId} = event.pathParameters;
+
+    console.log('When calling, the following arguments of the path parameters are received: productId =', productId);
+
+    if (!productId) {
+      return {
+        statusCode: 400,
+        message: 'Product id is not defined'
+      }
+    }
+
     const productDBInfo = await dynamo.query({
       TableName: process.env.DYNAMODB_PRODUCTS_DB,
       KeyConditionExpression: 'id = :id',
@@ -61,7 +61,7 @@ export const getProductsById = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(responseProduct),
+      body: JSON.stringify(responseProduct)
     };
   } catch(error) {
     return {
