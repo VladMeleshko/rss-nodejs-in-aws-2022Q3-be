@@ -1,9 +1,7 @@
-import AWS from 'aws-sdk';
+import { tryDBConnect } from './database/db-connection';
 import { prepareResponse } from './utils/prepareResponse';
 
-const dynamo = new AWS.DynamoDB.DocumentClient({
-  region: 'eu-west-1'
-});
+const productRepositoryPromise = tryDBConnect().then(connection => connection.getRepository("Products"));
 
 export const getProductsById = async (event) => {
   console.log('Get product by id handler called');
@@ -20,44 +18,31 @@ export const getProductsById = async (event) => {
       }
     }
 
-    const productDBInfo = await dynamo.query({
-      TableName: process.env.DYNAMODB_PRODUCTS_DB,
-      KeyConditionExpression: 'id = :id',
-      ExpressionAttributeValues: {':id': productId}
-    }).promise();
+    const productRepository = await productRepositoryPromise;
+    const product = await productRepository.findOne({
+      where: {
+        id: productId
+      },
+      relations: {
+        stock: true
+      }
+    });
 
-    if (!productDBInfo || !productDBInfo.Items) {
-      throw new Error('Incorrect response received from "Products" database');
-    }
-
-    if (!productDBInfo.Items.length) {
+    if (!product) {
       return {
         statusCode: 404,
         message: 'Product not found',
       };
     }
 
-    const productStockDBInfo = await dynamo.query({
-      TableName: process.env.DYNAMODB_STOCKS_DB,
-      KeyConditionExpression: 'product_id = :productId',
-      ExpressionAttributeValues: {':productId': productId}
-    }).promise();
-
-    if (!productStockDBInfo || !productStockDBInfo.Items) {
-      throw new Error('Incorrect response received from "Stocks" database');
-    }
-
-    if (!productStockDBInfo.Items.length) {
+    if (!product.stock) {
       return {
         statusCode: 404,
         message: 'Stock not found',
       };
     }
 
-    const product = productDBInfo.Items[0];
-    const stock = productStockDBInfo.Items[0];
-
-    const responseProduct = prepareResponse(product, stock);
+    const responseProduct = prepareResponse(product);
 
     return {
       statusCode: 200,

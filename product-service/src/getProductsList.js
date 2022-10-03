@@ -1,42 +1,26 @@
-import AWS from 'aws-sdk';
+import { tryDBConnect } from './database/db-connection';
 import { prepareResponse } from './utils/prepareResponse';
 
-const dynamo = new AWS.DynamoDB.DocumentClient({
-  region: 'eu-west-1'
-});
+const productRepositoryPromise = tryDBConnect().then(connection => connection.getRepository("Products"));
 
 export const getProductsList = async () => {
   console.log('Handler for getting product list called');
   console.log('Arguments were not passed, because the full list of products will be received');
 
   try {
-    const productsDBInfo  = await dynamo.scan({
-      TableName: process.env.DYNAMODB_PRODUCTS_DB
-    }).promise();
-
-    if (!productsDBInfo || !productsDBInfo.Items) {
-      throw new Error('Incorrect response received from "Products" database');
-    }
-
-    const productStocksDBInfo = await dynamo.scan({
-      TableName: process.env.DYNAMODB_STOCKS_DB
-    }).promise();
-
-    if (!productStocksDBInfo || !productStocksDBInfo.Items) {
-      throw new Error('Incorrect response received from "Stocks" database');
-    }
-
-    const products = productsDBInfo.Items;
-    const productStocks = productStocksDBInfo.Items;
+    const productRepository = await productRepositoryPromise;
+    const products = await productRepository.find({
+      relations: {
+        stock: true
+      }
+    });
 
     const responseProductList = products.map(product => {
-      const stock = productStocks.find(productStock => productStock.product_id === product.id);
-
-      if (!stock) {
+      if (!product.stock) {
         throw new Error(`Stock belonging to a product with id ${product.id} was not found`);
       }
 
-      return prepareResponse(product, stock);
+      return prepareResponse(product);
     })
 
     return {

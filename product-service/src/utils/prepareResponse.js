@@ -1,3 +1,5 @@
-export const prepareResponse = (product, stock) => {
-    return {...product, count: stock.count};
+export const prepareResponse = (product) => {
+  const response = {...product, count: product.stock.count};
+  delete response.stock;
+  return response;
 }

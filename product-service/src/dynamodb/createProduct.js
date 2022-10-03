@@ -1,16 +1,16 @@
-import { tryDBConnect } from './database/db-connection';
+import AWS from 'aws-sdk';
 import { prepareResponse } from './utils/prepareResponse';
 import * as Joi from 'joi';
 import {v4} from 'uuid';
 
-const productRepositoryPromise = tryDBConnect().then(connection => connection.getRepository("Products"));
-const databaseConnectionPromise = tryDBConnect();
-
+const dynamo = new AWS.DynamoDB.DocumentClient({
+  region: 'eu-west-1'
+});
 const validationSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string(),
-  price: Joi.number().required(),
-  count: Joi.number().required()
+  price: Joi.number(),
+  count: Joi.number()
 });
 
 export const createProduct = async (event) => {
@@ -45,41 +45,30 @@ export const createProduct = async (event) => {
     console.log('New product will be created with data: ', value);
 
     const productId = v4();
-    const stockId = v4();
-    const productRepository = await productRepositoryPromise;
-    const databaseConnection = await databaseConnectionPromise;
+    const product = {
+      id: productId,
+      title: value.title,
+      description: value.description,
+      price: value.price
+    }
+    const stock = {
+      product_id: productId,
+      count: value.count
+    }
 
-    await databaseConnection.transaction(async (manager) => {
-      const savedProduct = await manager.getRepository("Products").save(
-        {
-          id: productId,
-          title: value.title,
-          description: value.description,
-          price: value.price
-         }
-      )
+    await dynamo.put({
+      TableName: process.env.DYNAMODB_PRODUCTS_DB,
+      Item: product
+    }).promise()
 
-      await manager.getRepository("Stocks").save({
-        id: stockId,
-        product: savedProduct,
-        count: value.count
-      })
-    });
-
-    const product = await productRepository.findOne({
-      where: {
-        id: productId
-      },
-      relations: {
-        stock: true
-      }
-    });
-
-    const responseProduct = prepareResponse(product);
+    await dynamo.put({
+      TableName: process.env.DYNAMODB_STOCKS_DB,
+      Item: stock
+    }).promise()
 
     return {
       statusCode: 201,
-      body: JSON.stringify(responseProduct)
+      body: JSON.stringify(prepareResponse(product, stock))
     };
   } catch (error) {
     return {
