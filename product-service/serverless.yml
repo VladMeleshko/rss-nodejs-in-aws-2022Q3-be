@@ -12,8 +12,11 @@ provider:
   httpApi:
     cors: true
   environment:
-    DYNAMODB_PRODUCTS_DB: ${env:DYNAMODB_PRODUCTS_DB}
-    DYNAMODB_STOCKS_DB: ${env:DYNAMODB_STOCKS_DB}
+    POSTGRES_HOST: ${env:POSTGRES_HOST}
+    POSTGRES_PORT: ${env:POSTGRES_PORT}
+    POSTGRES_USER: ${env:POSTGRES_USER}
+    POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
+    POSTGRES_DB: ${env:POSTGRES_DB}
 
 plugins:
   - serverless-webpack
