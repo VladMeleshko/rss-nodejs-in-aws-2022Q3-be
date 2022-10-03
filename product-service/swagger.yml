@@ -21,7 +21,29 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Product"
+              $ref: "#/definitions/ProductResponse"
+        "500":
+          description: "Something went wrong during getting product list"
+    post:
+      tags:
+      - "product-service"
+      summary: "Create product"
+      description: "Create a new product"
+      parameters:
+      - name: "create_product_body"
+        in: "body"
+        description: "Create a new product"
+        schema:
+          $ref: '#/definitions/CreateProductBody'
+      responses:
+        "201":
+          description: "Return a product"
+          schema:
+            $ref: "#/definitions/ProductResponse"
+        "400":
+          description: "Data for creating new product is not defined OR Data for creating new product is not valid"
+        "500":
+          description: "Something went wrong during the creation of new product"
   /products/{productId}:
     get:
       tags:
@@ -41,11 +63,15 @@ paths:
         "200":
           description: "Return a product"
           schema:
-            $ref: "#/definitions/Product"
+            $ref: "#/definitions/ProductResponse"
+        "400":
+          description: "Product id is not defined OR Stock not found"
         "404":
           description: "Product not found!"
+        "500":
+          description: "Something went wrong during getting product by id"
 definitions:
-  Product:
+  ProductResponse:
     type: "object"
     properties:
       id:
@@ -60,4 +86,17 @@ definitions:
         format: "integer64"
       price:
         type: "number"
-        format: "float"
+        format: "integer64"
+  CreateProductBody:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      description:
+        type: "string"
+      count:
+        type: "number"
+        format: "integer64"
+      price:
+        type: "number"
+        format: "integer64"
