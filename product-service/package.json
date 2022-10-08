@@ -10,5 +10,12 @@
     "jest": "^29.0.3",
     "serverless-webpack": "^5.9.1",
     "webpack": "^5.74.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1227.0",
+    "joi": "^17.6.2",
+    "pg": "^8.8.0",
+    "typeorm": "^0.3.10",
+    "uuid": "^9.0.0"
   }
 }

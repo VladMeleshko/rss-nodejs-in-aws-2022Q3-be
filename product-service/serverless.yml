@@ -2,6 +2,8 @@ service: product-service
 
 frameworkVersion: '3'
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -9,6 +11,12 @@ provider:
   region: eu-west-1
   httpApi:
     cors: true
+  environment:
+    POSTGRES_HOST: ${env:POSTGRES_HOST}
+    POSTGRES_PORT: ${env:POSTGRES_PORT}
+    POSTGRES_USER: ${env:POSTGRES_USER}
+    POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
+    POSTGRES_DB: ${env:POSTGRES_DB}
 
 plugins:
   - serverless-webpack
@@ -26,3 +34,9 @@ functions:
       - httpApi:
           path: /products/{productId}
           method: get
+  createProduct:
+    handler: src/createProduct.createProduct
+    events:
+      - httpApi:
+          path: /products
+          method: post
