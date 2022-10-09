@@ -11,7 +11,7 @@ export const importProductsFile = async (event) => {
   }
 
   const s3 = new AWS.S3({region: 'eu-west-1'});
-  const bucketName = 'import-service-rss-nodejs-in-aws-course';
+  const bucketName = process.env.BUCKET_NAME;
   const key = `uploaded/${name}`
 
   const params = {
@@ -22,7 +22,7 @@ export const importProductsFile = async (event) => {
   };
 
   try {
-    const signedUrl = await s3.getSignedUrl('putObject', params);
+    const signedUrl = await s3.getSignedUrlPromise('putObject', params);
 
     return {
       statusCode: 200,
