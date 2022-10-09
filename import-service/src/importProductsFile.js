@@ -5,8 +5,8 @@ export const importProductsFile = async (event) => {
 
   if (!name) {
     return {
-      statusCode: 403,
-      message: 'CSV file name is not defined',
+      statusCode: 400,
+      message: 'CSV file name is not entered',
     }
   }
 
@@ -35,7 +35,7 @@ export const importProductsFile = async (event) => {
   } catch (error) {
     return {
       statusCode: 500,
-      message: 'Something went wrong during creating signed url',
+      message: 'Something went wrong during getting Signed URL',
       error: JSON.stringify(error)
     }
   } 
