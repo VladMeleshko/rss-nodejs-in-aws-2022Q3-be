@@ -9,6 +9,8 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: eu-west-1
+  httpApi:
+    cors: true
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
   iam:
@@ -31,14 +33,20 @@ functions:
   importProductsFile:
     handler: src/importProductsFile.importProductsFile
     events:
-      - http:
+      - httpApi:
           method: get
           path: /import
-          cors: true
-          request:
-            parameters:
-              querystrings:
-                name: true
+  # importProductsFile:
+  #   handler: src/importProductsFile.importProductsFile
+  #   events:
+  #     - http:
+  #         method: get
+  #         path: /import
+  #         cors: true
+  #         request:
+  #           parameters:
+  #             querystrings:
+  #               name: true
   importFileParser:
     handler: src/importFileParser.importFileParser
     events:
