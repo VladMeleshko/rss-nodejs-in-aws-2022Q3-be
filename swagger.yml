@@ -5,6 +5,7 @@ info:
   title: "Programming Book Shop Swagger"
 tags:
 - name: "product-service"
+- name: "import-service"
 schemes:
 - "https"
 paths:
@@ -70,6 +71,28 @@ paths:
           description: "Product not found!"
         "500":
           description: "Something went wrong during getting product by id"
+  /import:
+    get:
+      tags:
+      - "import-service"
+      description: "Get a Signed URL to import file"
+      produces: 
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Imported file name"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Return a Signed URL"
+          schema:
+            $ref: "#/definitions/SifnedURL"
+        "400":
+          description: "CSV file name is not defined"
+        "500":
+          description: "Something went wrong during getting Signed URL"
 definitions:
   ProductResponse:
     type: "object"
@@ -100,3 +123,5 @@ definitions:
       price:
         type: "number"
         format: "integer64"
+  SifnedURL:
+    type: "string"
