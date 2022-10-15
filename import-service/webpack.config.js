@@ -5,6 +5,9 @@ const webpack = require('webpack')
 
 module.exports = {
   entry: slsw.lib.entries,
+  plugins: [
+    new webpack.IgnorePlugin({resourceRegExp: /^pg-native$/})
+  ],
   output: {
     libraryTarget: 'commonjs',
     path: path.join(__dirname, '.webpack'),

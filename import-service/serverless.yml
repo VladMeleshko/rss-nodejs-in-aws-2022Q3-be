@@ -13,6 +13,15 @@ provider:
     cors: true
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
+    POSTGRES_HOST: ${env:POSTGRES_HOST}
+    POSTGRES_PORT: ${env:POSTGRES_PORT}
+    POSTGRES_USER: ${env:POSTGRES_USER}
+    POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
+    POSTGRES_DB: ${env:POSTGRES_DB}
+    SQS_URL:
+      Ref: catalogItemsQueue
+    SNS_ARN:
+      Ref: createProductTopic
   iam:
     role:
       statements:
@@ -25,6 +34,18 @@ provider:
             - s3:*
           Resource:
             - arn:aws:s3:::${env:BUCKET_NAME}/*
+        - Effect: Allow
+          Action: 
+            - sqs:*
+          Resource:
+            - Fn::GetAtt: 
+                - catalogItemsQueue
+                - Arn
+        - Effect: Allow
+          Action:
+            - sns:*
+          Resource:
+            Ref: createProductTopic
 
 plugins:
   - serverless-webpack
@@ -56,3 +77,30 @@ functions:
           rules:
             - prefix: uploaded/
           existing: true
+  catalogBatchProcess:
+    handler: src/catalogBatchProcess.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt:
+              - catalogItemsQueue
+              - Arn
+
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+    createProductTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:EMAIL}
+        Protocol: email
+        TopicArn:
+          Ref: createProductTopic
