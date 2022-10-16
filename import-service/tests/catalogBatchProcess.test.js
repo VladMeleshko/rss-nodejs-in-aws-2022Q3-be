@@ -11,7 +11,7 @@ const testProduct = JSON.stringify({
 });
 
 describe('catalogBatchProcess tests', () => {  
-  it("Get error with 400 status code when lambda can't get products from request", async () => {
+  it("Get error with 400 status code when lambda can't get products from request body", async () => {
     const catalogBatchProcessResponse = await catalogBatchProcess({Records:[]});
 
     expect(catalogBatchProcessResponse.statusCode).toBe(400);
