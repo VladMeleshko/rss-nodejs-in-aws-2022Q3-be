@@ -41,7 +41,7 @@ export const catalogBatchProcess = async (event) => {
 
         const productId = v4();
         const stockId = v4();
-  
+
         const savedProduct = await manager.getRepository("Products").save({
           id: productId,
           title: value.title,

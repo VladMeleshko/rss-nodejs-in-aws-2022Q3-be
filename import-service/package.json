@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest"
+    "test": "jest --setupFiles dotenv/config"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
