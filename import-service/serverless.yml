@@ -104,3 +104,14 @@ resources:
         Protocol: email
         TopicArn:
           Ref: createProductTopic
+        FilterPolicy:
+          count: [{"numeric": [">=", 100]}]
+    SNSSubscriptionSmallCount:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:ADDITIONAL_EMAIL}
+        Protocol: email
+        TopicArn:
+          Ref: createProductTopic
+        FilterPolicy:
+          count: [{"numeric": ["<", 100]}]

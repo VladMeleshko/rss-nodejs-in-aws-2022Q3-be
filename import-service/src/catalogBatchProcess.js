@@ -54,16 +54,22 @@ export const catalogBatchProcess = async (event) => {
           product: savedProduct,
           count: value.count
         })
-      }
-    });
 
-    // used catch instead of callback because, if you will use callback in piblish method with promise, than SNS will send duplicates of messages
-    await sns.publish({
-      Subject: 'Your products have been uploaded',
-      Message: `The following products have been uploaded: ${productsList}`,
-      TopicArn: snsArn
-    }).promise().catch(err => {
-      throw new Error(JSON.stringify(err));
+        // used catch instead of callback because, if you will use callback in piblish method with promise, than SNS will send duplicates of messages
+        await sns.publish({
+          Subject: 'Your product has been uploaded',
+          Message: `The following product has been uploaded: ${JSON.stringify(product)}`,
+          TopicArn: snsArn,
+          MessageAttributes: {
+            count: {
+              DataType: "Number", 
+              StringValue: `${value.count}`
+           }
+          }
+        }).promise().catch(err => {
+          throw new Error(JSON.stringify(err));
+        });
+      }
     });
   } catch (error) {
     return serverErrorResponse(500, 'Something went wrong during the creation of new product(s)', error);
