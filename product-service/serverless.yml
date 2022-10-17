@@ -17,6 +17,25 @@ provider:
     POSTGRES_USER: ${env:POSTGRES_USER}
     POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
     POSTGRES_DB: ${env:POSTGRES_DB}
+    SQS_URL:
+      Ref: catalogItemsQueue
+    SNS_ARN:
+      Ref: createProductTopic
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 
+            - sqs:*
+          Resource:
+            - Fn::GetAtt: 
+                - catalogItemsQueue
+                - Arn
+        - Effect: Allow
+          Action:
+            - sns:*
+          Resource:
+            Ref: createProductTopic
 
 plugins:
   - serverless-webpack
@@ -40,3 +59,41 @@ functions:
       - httpApi:
           path: /products
           method: post
+  catalogBatchProcess:
+    handler: src/catalogBatchProcess.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt:
+              - catalogItemsQueue
+              - Arn
+
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+    createProductTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:EMAIL}
+        Protocol: email
+        TopicArn:
+          Ref: createProductTopic
+        FilterPolicy:
+          count: [{"numeric": [">=", 100]}]
+    SNSSubscriptionSmallCount:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:ADDITIONAL_EMAIL}
+        Protocol: email
+        TopicArn:
+          Ref: createProductTopic
+        FilterPolicy:
+          count: [{"numeric": ["<", 100]}]

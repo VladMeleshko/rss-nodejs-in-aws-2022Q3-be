@@ -1,6 +1,6 @@
 import AWSMock from 'aws-sdk-mock';
-import { catalogBatchProcess } from '../src/catalogBatchProcess';
-import { tryDBConnect } from '../src/database/db-connection';
+import { catalogBatchProcess } from '../catalogBatchProcess';
+import { tryDBConnect } from '../database/db-connection';
 
 const productRepositoryPromise = tryDBConnect().then(connection => connection.getRepository("Products"));
 const testProduct = JSON.stringify({

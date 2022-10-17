@@ -13,15 +13,7 @@ provider:
     cors: true
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
-    POSTGRES_HOST: ${env:POSTGRES_HOST}
-    POSTGRES_PORT: ${env:POSTGRES_PORT}
-    POSTGRES_USER: ${env:POSTGRES_USER}
-    POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
-    POSTGRES_DB: ${env:POSTGRES_DB}
-    SQS_URL:
-      Ref: catalogItemsQueue
-    SNS_ARN:
-      Ref: createProductTopic
+    SQS_URL: ${env:SQS_URL}
   iam:
     role:
       statements:
@@ -38,14 +30,7 @@ provider:
           Action: 
             - sqs:*
           Resource:
-            - Fn::GetAtt: 
-                - catalogItemsQueue
-                - Arn
-        - Effect: Allow
-          Action:
-            - sns:*
-          Resource:
-            Ref: createProductTopic
+            - ${env:SQS_ARN}
 
 plugins:
   - serverless-webpack
@@ -77,41 +62,3 @@ functions:
           rules:
             - prefix: uploaded/
           existing: true
-  catalogBatchProcess:
-    handler: src/catalogBatchProcess.catalogBatchProcess
-    events:
-      - sqs:
-          batchSize: 5
-          arn:
-            Fn::GetAtt:
-              - catalogItemsQueue
-              - Arn
-
-resources:
-  Resources:
-    catalogItemsQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: catalogItemsQueue
-    createProductTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        TopicName: createProductTopic
-    SNSSubscription:
-      Type: AWS::SNS::Subscription
-      Properties:
-        Endpoint: ${env:EMAIL}
-        Protocol: email
-        TopicArn:
-          Ref: createProductTopic
-        FilterPolicy:
-          count: [{"numeric": [">=", 100]}]
-    SNSSubscriptionSmallCount:
-      Type: AWS::SNS::Subscription
-      Properties:
-        Endpoint: ${env:ADDITIONAL_EMAIL}
-        Protocol: email
-        TopicArn:
-          Ref: createProductTopic
-        FilterPolicy:
-          count: [{"numeric": ["<", 100]}]

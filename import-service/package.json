@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest --setupFiles dotenv/config"
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -14,9 +14,6 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1231.0",
-    "csv-parser": "^3.0.0",
-    "joi": "^17.6.3",
-    "pg": "^8.8.0",
-    "typeorm": "^0.3.10"
+    "csv-parser": "^3.0.0"
   }
 }
