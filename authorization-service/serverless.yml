@@ -1,0 +1,23 @@
+service: authorization-service
+
+frameworkVersion: '3'
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: eu-west-1
+  environment:
+    VladMeleshko: ${env:VladMeleshko}
+    AUTH_TYPE: ${env:AUTH_TYPE}
+    AUTH_SCHEME: ${env:AUTH_SCHEME}
+
+plugins:
+  - serverless-webpack
+  - serverless-dotenv-plugin
+
+functions:
+  basicAuthorizer:
+    handler: src/basicAuthorizer.basicAuthorizer

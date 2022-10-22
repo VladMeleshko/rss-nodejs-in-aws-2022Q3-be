@@ -11,9 +11,17 @@ provider:
   region: eu-west-1
   httpApi:
     cors: true
+    authorizers:
+      basicAuthorizer:
+        functionArn: ${env:AUTHORIZER_LAMBDA_ARN}
+        resultTtlInSeconds: 0
+        identitySource: $request.header.Authorization
+        type: request
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
     SQS_URL: ${env:SQS_URL}
+    SQS_ARN: ${env:SQS_ARN}
+    AUTHORIZER_LAMBDA_ARN: ${env:AUTHORIZER_LAMBDA_ARN}
   iam:
     role:
       statements:
@@ -42,6 +50,8 @@ functions:
       - httpApi:
           method: get
           path: /import
+          authorizer:
+            name: basicAuthorizer
   # importProductsFile:
   #   handler: src/importProductsFile.importProductsFile
   #   events:
