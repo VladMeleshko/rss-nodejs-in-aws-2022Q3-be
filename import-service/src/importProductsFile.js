@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { serverErrorResponse } from './utils/serverErrorResponse';
 
 export const importProductsFile = async (event) => {
   const {name} = event.queryStringParameters;
@@ -33,10 +34,6 @@ export const importProductsFile = async (event) => {
       body: JSON.stringify(signedUrl)
     };
   } catch (error) {
-    return {
-      statusCode: 500,
-      message: 'Something went wrong during getting Signed URL',
-      error: JSON.stringify(error)
-    }
+    return serverErrorResponse(500, 'Something went wrong during getting Signed URL', error);
   } 
 };

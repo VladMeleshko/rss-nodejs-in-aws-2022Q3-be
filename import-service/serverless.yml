@@ -13,6 +13,7 @@ provider:
     cors: true
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
+    SQS_URL: ${env:SQS_URL}
   iam:
     role:
       statements:
@@ -25,6 +26,11 @@ provider:
             - s3:*
           Resource:
             - arn:aws:s3:::${env:BUCKET_NAME}/*
+        - Effect: Allow
+          Action: 
+            - sqs:*
+          Resource:
+            - ${env:SQS_ARN}
 
 plugins:
   - serverless-webpack
