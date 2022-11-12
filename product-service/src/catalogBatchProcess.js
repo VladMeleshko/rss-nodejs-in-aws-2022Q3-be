@@ -19,7 +19,7 @@ export const catalogBatchProcess = async (event) => {
   if (!productsList || !productsList.length) {
     return {
       statusCode: 400,
-      message: "Сouldn't get a list of imported products"
+      body: "Сouldn't get a list of imported products"
     }
   }
 

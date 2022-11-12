@@ -14,7 +14,7 @@ export const getProductsById = async (event) => {
     if (!productId) {
       return {
         statusCode: 400,
-        message: 'Product id is not defined'
+        body: 'Product id is not defined'
       }
     }
 
@@ -31,14 +31,14 @@ export const getProductsById = async (event) => {
     if (!product) {
       return {
         statusCode: 404,
-        message: 'Product not found',
+        body: 'Product not found',
       };
     }
 
     if (!product.stock) {
       return {
         statusCode: 404,
-        message: 'Stock not found',
+        body: 'Stock not found',
       };
     }
 
@@ -51,8 +51,10 @@ export const getProductsById = async (event) => {
   } catch(error) {
     return {
       statusCode: 500,
-      message: 'Something went wrong during getting product by id',
-      error: JSON.stringify(error)
+      body: JSON.stringify({
+        message: 'Something went wrong during getting product by id',
+        error
+      })
     }
   }
 };

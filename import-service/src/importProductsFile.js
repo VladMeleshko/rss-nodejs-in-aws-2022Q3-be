@@ -7,7 +7,7 @@ export const importProductsFile = async (event) => {
   if (!name) {
     return {
       statusCode: 400,
-      message: 'CSV file name is not entered',
+      body: 'CSV file name is not entered',
     }
   }
 

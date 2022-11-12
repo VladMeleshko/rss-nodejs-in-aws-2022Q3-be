@@ -24,7 +24,7 @@ export const createProduct = async (event) => {
     if (!body) {
       return {
         statusCode: 400,
-        message: 'Data for creating new product is not defined'
+        body: 'Data for creating new product is not defined'
       }
     }
 
@@ -37,8 +37,10 @@ export const createProduct = async (event) => {
     if (error) {
       return {
         statusCode: 400,
-        message: 'Data for creating new product is not valid',
-        error: JSON.stringify(error),
+        body: JSON.stringify({
+          message: 'Data for creating new product is not valid',
+          error
+        })
       }
     }
 
@@ -84,8 +86,10 @@ export const createProduct = async (event) => {
   } catch (error) {
     return {
       statusCode: 500,
-      message: 'Something went wrong during the creation of new product',
-      error: JSON.stringify(error)
+      body: JSON.stringify({
+        message: 'Something went wrong during the creation of new product',
+        error
+      })
     }
   }
 };
