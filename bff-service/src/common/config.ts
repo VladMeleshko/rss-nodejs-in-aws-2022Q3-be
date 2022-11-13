@@ -6,6 +6,7 @@ dotenv.config({
 });
 
 export default {
+  PORT: process.env.PORT,
   products: process.env.products,
   cart: process.env.cart,
 };
