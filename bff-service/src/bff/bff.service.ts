@@ -51,7 +51,12 @@ export class BffService {
           }
         }
 
-        return typeof data === 'string' ? JSON.parse(data) : data;
+        return status >= 200 && status <= 299
+          ? JSON.parse(data)
+          : {
+              status,
+              data,
+            };
       } catch (error) {
         return {
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
