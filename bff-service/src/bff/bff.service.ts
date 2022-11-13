@@ -51,14 +51,11 @@ export class BffService {
           }
         }
 
-        return {
-          statusCode: status,
-          body: data,
-        };
+        return typeof data === 'string' ? JSON.parse(data) : data;
       } catch (error) {
         return {
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          body: {
+          data: {
             error: error.message,
           },
         };
@@ -66,7 +63,7 @@ export class BffService {
     } else {
       return {
         statusCode: HttpStatus.BAD_GATEWAY,
-        body: {
+        data: {
           error: 'Cannot process request',
         },
       };
@@ -91,6 +88,8 @@ export class BffService {
 
     const { status, data } = await axios.request(axiosConfig);
 
-    await this.cacheManager.set(productsCacheKey, { status, data }, ttl);
+    if (status === 200) {
+      await this.cacheManager.set(productsCacheKey, JSON.parse(data), ttl);
+    }
   }
 }
