@@ -18,3 +18,14 @@ INSERT INTO "Stocks" (id, product_id, count) VALUES ('c8f1e5f5-2e93-49ff-970b-ef
 INSERT INTO "Stocks" (id, product_id, count) VALUES ('05bebc66-855b-4363-aefe-96c14a10973f', '7d7c9623-140b-4c38-9173-9ce1bff8e71c', 15);
 INSERT INTO "Stocks" (id, product_id, count) VALUES ('9ad459b6-19b9-4544-8593-cec72836ddd8', '19b19154-ce18-47c0-9ac0-d486e31897b0', 47);
 INSERT INTO "Stocks" (id, product_id, count) VALUES ('b18c940e-e4ad-461a-a584-015fb4b09458', 'a0371018-10cf-44d4-a567-743464026245', 50);
+
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/you_dont_know_js_up_and_go.jpg' WHERE "id"='08030371-fcda-4c85-8adb-88ef6e80349b';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/you_dont_know_js_scope_and_closures.jpg' WHERE "id"='83c66ad2-3b7e-4195-be68-d8e4b084c822';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/you_dont_know_js_this_and_object_prototypes.jpg' WHERE "id"='68f4e07f-a44c-492a-821f-03ce80ef11f6';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/you_dont_know_js_types_and_grammar.jpg' WHERE "id"='568a4b45-23da-40ff-92ea-61169efa3f58';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/you_dont_know_js_async_and_performance.jpg' WHERE "id"='aa5e9001-6b87-4ef8-bbb2-a873f865dd30';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/you_dont_know_js_es6_and_beyond.jpg' WHERE "id"='10d5c25c-3676-479a-b2a9-8afc1fd872ed';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/eloquent_js.jpg' WHERE "id"='32be858c-68bb-4c82-80dd-b995db535b1c';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/grokking_algorithms.jpg' WHERE "id"='7d7c9623-140b-4c38-9173-9ce1bff8e71c';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/clean_code.jpg' WHERE "id"='19b19154-ce18-47c0-9ac0-d486e31897b0';
+UPDATE "Products" SET "image"='https://rss-nodejs-in-aws-product-images.s3.eu-west-1.amazonaws.com/clean_architecture.jpg' WHERE "id"='a0371018-10cf-44d4-a567-743464026245';
