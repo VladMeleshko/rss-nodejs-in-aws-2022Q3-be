@@ -1,6 +1,5 @@
 import { Injectable, HttpStatus, Inject, CACHE_MANAGER } from '@nestjs/common';
 import { Axios } from 'axios';
-import config from '../common/config';
 import { Cache } from 'cache-manager';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class BffService {
     const productsURL = '/products';
     const productsCacheKey = 'products';
     const recipient = req.url.split('/')[1];
-    const recipientUrl = config[recipient];
+    const recipientUrl = process.env[recipient];
 
     if (recipientUrl) {
       const axiosConfig = {
@@ -76,7 +75,7 @@ export class BffService {
 
   async cachingProducts(req: Request, productsCacheKey: string): Promise<void> {
     const products = 'products';
-    const recipientUrl = config[products];
+    const recipientUrl = process.env[products];
     const ttl = 120000; // 120000 ms === 120 s === 2 m
 
     const axiosConfig = {
