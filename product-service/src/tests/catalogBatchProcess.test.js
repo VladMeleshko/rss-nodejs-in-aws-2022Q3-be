@@ -15,7 +15,7 @@ describe('catalogBatchProcess tests', () => {
     const catalogBatchProcessResponse = await catalogBatchProcess({Records:[]});
 
     expect(catalogBatchProcessResponse.statusCode).toBe(400);
-    expect(catalogBatchProcessResponse.message).toBe("Сouldn't get a list of imported products");
+    expect(catalogBatchProcessResponse.body).toBe("Сouldn't get a list of imported products");
   });
 
   it("Get error with 500 status code while sending a message to an Amazon SNS topic", async () => {
@@ -28,7 +28,6 @@ describe('catalogBatchProcess tests', () => {
     AWSMock.restore('SNS', 'publish');
 
     expect(catalogBatchProcessResponse.statusCode).toBe(500);
-    expect(catalogBatchProcessResponse.message).toBe("Something went wrong during the creation of new product(s)");
   });
 
   it("Get undefined if everything work successfully (this lambda is not require any response)", async () => {

@@ -2,7 +2,7 @@ import { getProductsById } from "../getProductsById";
 
 describe('getProductsById', () => {
   it('Get one product', async () => {
-    const testId = '0361e7da-41c9-4cb6-a181-ffd9670185a5'
+    const testId = '08030371-fcda-4c85-8adb-88ef6e80349b'
     const getProductsByIdResponse = await getProductsById(
       {
         pathParameters: {
@@ -23,6 +23,6 @@ describe('getProductsById', () => {
       });
 
     expect(getProductsByIdResponse.statusCode).toBe(404);
-    expect(getProductsByIdResponse.message).toBe('Product not found');
+    expect(getProductsByIdResponse.body).toBe('Product not found');
   })
 })

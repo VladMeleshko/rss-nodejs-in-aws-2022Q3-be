@@ -30,8 +30,10 @@ export const getProductsList = async () => {
   } catch(error) {
     return {
       statusCode: 500,
-      message: 'Something went wrong during getting product list',
-      error: JSON.stringify(error)
+      body: JSON.stringify({
+        message: 'Something went wrong during getting product list',
+        error
+      })
     }
   }
 };
